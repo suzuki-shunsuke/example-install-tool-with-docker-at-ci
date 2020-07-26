@@ -8,6 +8,16 @@ commands:
     steps:
       - restore_cache:
           key: << parameters.tool >>-{{ .Environment.CIRCLE_SHA1 }}
+  check-tool:
+    parameters:
+      tool:
+        type: string
+    steps:
+      - run:
+          name: check << parameters.tool >>
+          command: |
+            command -v << parameters.tool >>
+            << parameters.tool >> --version
 
 workflows:
   build:
@@ -32,21 +42,12 @@ jobs:
           tool: golangci-lint
       - install-tool:
           tool: shfmt
-      - run:
-          name: check conftest
-          command: |
-            which conftest
-            conftest --version
-      - run:
-          name: check golangci-lint
-          command: |
-            which golangci-lint
-            golangci-lint --version
-      - run:
-          name: check shfmt
-          command: |
-            which shfmt
-            shfmt --version
+      - check-tool:
+          tool: conftest
+      - check-tool:
+          tool: golangci-lint
+      - check-tool:
+          tool: shfmt
 
   save-conftest:
     docker:
