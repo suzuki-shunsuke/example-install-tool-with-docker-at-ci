@@ -1,0 +1,37 @@
+---
+version: 2.1
+commands:
+  install-conftest:
+    steps:
+      - restore_cache:
+          key: conftest-{{ .Environment.CIRCLE_SHA1 }}
+
+workflows:
+  build:
+    jobs:
+      - save-conftest
+      - main:
+          requires:
+            - save-conftest
+
+jobs:
+  main:
+    docker:
+      - image: alpine:3.12.0
+    steps:
+      - install-conftest
+      - run:
+          name: check conftest
+          command: |
+            which conftest
+            conftest --version
+
+  save-conftest:
+    docker:
+      - image: instrumenta/conftest:v0.19.0
+    steps:
+      - save_cache:
+          key: conftest-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - /usr/local/bin/conftest
+            - /conftest
