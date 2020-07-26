@@ -6,6 +6,7 @@
     {
       "packageNames": [
         "instrumenta/conftest",
+        "golangci/golangci-lint",
         "alpine"
       ],
       "updateTypes": ["minor", "patch", "pin"],
