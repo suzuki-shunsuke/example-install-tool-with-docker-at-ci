@@ -5,14 +5,20 @@ commands:
     steps:
       - restore_cache:
           key: conftest-{{ .Environment.CIRCLE_SHA1 }}
+  install-golangci-lint:
+    steps:
+      - restore_cache:
+          key: golangci-lint-{{ .Environment.CIRCLE_SHA1 }}
 
 workflows:
   build:
     jobs:
       - save-conftest
+      - save-golangci-lint
       - main:
           requires:
             - save-conftest
+            - save-golangci-lint
 
 jobs:
   main:
@@ -20,11 +26,17 @@ jobs:
       - image: alpine:3.12.0
     steps:
       - install-conftest
+      - install-golangci-lint
       - run:
           name: check conftest
           command: |
             which conftest
             conftest --version
+      - run:
+          name: check golangci-lint
+          command: |
+            which golangci-lint
+            golangci-lint --version
 
   save-conftest:
     docker:
@@ -35,3 +47,12 @@ jobs:
           paths:
             - /usr/local/bin/conftest
             - /conftest
+
+  save-golangci-lint:
+    docker:
+      - image: golangci/golangci-lint:v1.28.3-alpine
+    steps:
+      - save_cache:
+          key: golangci-lint-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - /usr/bin/golangci-lint
