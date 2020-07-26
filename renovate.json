@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "packageNames": [
+        "instrumenta/conftest",
+        "alpine"
+      ],
+      "updateTypes": ["minor", "patch", "pin"],
+      "automerge": true
+    }
+  ]
+}
