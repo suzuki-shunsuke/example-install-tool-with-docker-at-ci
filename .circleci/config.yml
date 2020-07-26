@@ -58,7 +58,7 @@ jobs:
 
   save-conftest:
     docker:
-      - image: instrumenta/conftest:v0.19.0
+      - image: instrumenta/conftest:v0.20.0
     steps:
       - save_cache:
           key: conftest-{{ .Environment.CIRCLE_SHA1 }}
