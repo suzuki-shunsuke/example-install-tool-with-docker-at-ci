@@ -4,10 +4,8 @@
   ],
   "packageRules": [
     {
-      "packageNames": [
-        "instrumenta/conftest",
-        "golangci/golangci-lint",
-        "alpine"
+      "managers": [
+        "circleci"
       ],
       "updateTypes": ["minor", "patch", "pin"],
       "automerge": true
