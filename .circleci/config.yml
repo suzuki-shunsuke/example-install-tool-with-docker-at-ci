@@ -1,32 +1,37 @@
 ---
 version: 2.1
 commands:
-  install-conftest:
+  install-tool:
+    parameters:
+      tool:
+        type: string
     steps:
       - restore_cache:
-          key: conftest-{{ .Environment.CIRCLE_SHA1 }}
-  install-golangci-lint:
-    steps:
-      - restore_cache:
-          key: golangci-lint-{{ .Environment.CIRCLE_SHA1 }}
+          key: << parameters.tool >>-{{ .Environment.CIRCLE_SHA1 }}
 
 workflows:
   build:
     jobs:
       - save-conftest
       - save-golangci-lint
+      - save-shfmt
       - main:
           requires:
             - save-conftest
             - save-golangci-lint
+            - save-shfmt
 
 jobs:
   main:
     docker:
       - image: alpine:3.12.0
     steps:
-      - install-conftest
-      - install-golangci-lint
+      - install-tool:
+          tool: conftest
+      - install-tool:
+          tool: golangci-lint
+      - install-tool:
+          tool: shfmt
       - run:
           name: check conftest
           command: |
@@ -37,6 +42,11 @@ jobs:
           command: |
             which golangci-lint
             golangci-lint --version
+      - run:
+          name: check shfmt
+          command: |
+            which shfmt
+            shfmt --version
 
   save-conftest:
     docker:
@@ -56,3 +66,12 @@ jobs:
           key: golangci-lint-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - /usr/bin/golangci-lint
+
+  save-shfmt:
+    docker:
+      - image: mvdan/shfmt:v3.1.0-alpine
+    steps:
+      - save_cache:
+          key: shfmt-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - /bin/shfmt
