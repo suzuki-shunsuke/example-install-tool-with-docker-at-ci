@@ -25,11 +25,13 @@ workflows:
       - save-conftest
       - save-golangci-lint
       - save-shfmt
+      - save-shellcheck
       - main:
           requires:
             - save-conftest
             - save-golangci-lint
             - save-shfmt
+            - save-shellcheck
 
 jobs:
   main:
@@ -42,12 +44,16 @@ jobs:
           tool: golangci-lint
       - install-tool:
           tool: shfmt
+      - install-tool:
+          tool: shellcheck
       - check-tool:
           tool: conftest
       - check-tool:
           tool: golangci-lint
       - check-tool:
           tool: shfmt
+      - check-tool:
+          tool: shellcheck
 
   save-conftest:
     docker:
@@ -76,3 +82,12 @@ jobs:
           key: shfmt-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - /bin/shfmt
+
+  save-shellcheck:
+    docker:
+      - image: koalaman/shellcheck-alpine:v0.6.0
+    steps:
+      - save_cache:
+          key: shellcheck-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - /bin/shellcheck
