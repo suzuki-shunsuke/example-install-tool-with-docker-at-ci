@@ -37,7 +37,7 @@ workflows:
 jobs:
   main:
     docker:
-      - image: alpine:3.12.0
+      - image: alpine:3.12.1
     steps:
       - install-tool:
           tool: conftest
