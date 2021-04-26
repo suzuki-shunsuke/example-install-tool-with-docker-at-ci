@@ -68,7 +68,7 @@ jobs:
 
   save-golangci-lint:
     docker:
-      - image: golangci/golangci-lint:v1.32.2-alpine
+      - image: golangci/golangci-lint:v1.39.0-alpine
     steps:
       - save_cache:
           key: golangci-lint-{{ .Environment.CIRCLE_SHA1 }}
