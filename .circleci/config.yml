@@ -77,7 +77,7 @@ jobs:
 
   save-shfmt:
     docker:
-      - image: mvdan/shfmt:v3.2.0-alpine
+      - image: mvdan/shfmt:v3.2.4-alpine
     steps:
       - save_cache:
           key: shfmt-{{ .Environment.CIRCLE_SHA1 }}
