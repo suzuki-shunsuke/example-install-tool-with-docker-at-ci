@@ -86,7 +86,7 @@ jobs:
 
   save-shellcheck:
     docker:
-      - image: koalaman/shellcheck-alpine:v0.7.1
+      - image: koalaman/shellcheck-alpine:v0.8.0
     steps:
       - save_cache:
           key: shellcheck-{{ .Environment.CIRCLE_SHA1 }}
